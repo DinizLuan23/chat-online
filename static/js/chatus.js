@@ -21,8 +21,18 @@ const sendMessage = async (data) => {
 
    const containerMessage = document.querySelector('.container-message');
    containerMessage.insertAdjacentHTML('beforeend', html);
+
+   Qs('.send-message').reset();
 }
 
+// Intercept form send-message
+Qs('.send-message').addEventListener('submit', (e) => {
+   e.preventDefault();
+   const data = Object.fromEntries(new FormData(e.target).entries())
+   sendMessage(data);
+})
+
+// Intercept form create-room
 Qs('.send-message').addEventListener('submit', (e) => {
    e.preventDefault();
    const data = Object.fromEntries(new FormData(e.target).entries())

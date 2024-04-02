@@ -11,7 +11,9 @@
          <div class="rooms m-3">
             <div class="d-flex justify-content-between">
                   <h3>chat<span class="text-primary">us</span></h3>
-                  <button class="btn btn-transparent mb-2"><i class="bi bi-plus-circle-fill text-primary"></i></button>
+                  <button class="btn btn-transparent mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                     <i class="bi bi-plus-circle-fill text-primary"></i>
+                  </button>
             </div>
 
             <ul class="list-rooms list-group shadow border-0">
@@ -29,6 +31,8 @@
          </div>
       </div>
    </div>
+
+   {% include 'chat/create-room.html' %}
 {% endblock %}
 
 {% block js %}

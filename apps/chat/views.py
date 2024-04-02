@@ -18,5 +18,8 @@ class RoomDetailView(DetailView):
 
 def send_message(req, pk):
    data = json.loads(req.body)
+   room = Room.objects.get(id=pk)
    new_message = Message.objects.create(user = req.user, text=data['message'])
+   room.messages.add(new_message)
+   
    return render(req, 'chat/message.html', { 'message': new_message })
