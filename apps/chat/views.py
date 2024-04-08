@@ -5,7 +5,7 @@ from django.views.generic.detail import DetailView
 from .models import Message, Room
 
 def home(req):
-   rooms = Room.objects.all()
+   rooms = Room.objects.all().order_by('-created_at')
    return render(req, 'chat/home.html', { 'rooms': rooms })
 
 class RoomDetailView(DetailView):
@@ -23,3 +23,9 @@ def send_message(req, pk):
    room.messages.add(new_message)
    
    return render(req, 'chat/message.html', { 'message': new_message })
+
+def create_room(req):
+   data = json.loads(req.body)
+   room = Room.objects.create(user=req.user, title=data['title'])
+   
+   return render(req, 'chat/room.html', { 'room': room })

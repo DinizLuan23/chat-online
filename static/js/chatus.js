@@ -25,6 +25,24 @@ const sendMessage = async (data) => {
    Qs('.send-message').reset();
 }
 
+const createRoom = async (data) => {
+   const response = await instance('/create-room', 'POST', 'application/json', data.csrfmiddlewaretoken, data)
+   const html = await response.text();
+
+   const listRooms = document.querySelector('.list-rooms');
+   listRooms.insertAdjacentHTML('afterbegin', html);
+
+   const modal = bootstrap.Modal.getInstance(Qs('.modal'))
+
+   modal.hide();
+   Qs('.create-room').reset();
+   getLastRoom();
+}
+
+const getLastRoom = () => Qs('.list-rooms li').click();
+
+// EVENTS
+
 // Intercept form send-message
 Qs('.send-message').addEventListener('submit', (e) => {
    e.preventDefault();
@@ -33,10 +51,11 @@ Qs('.send-message').addEventListener('submit', (e) => {
 })
 
 // Intercept form create-room
-Qs('.send-message').addEventListener('submit', (e) => {
+Qs('.create-room').addEventListener('submit', (e) => {
    e.preventDefault();
    const data = Object.fromEntries(new FormData(e.target).entries())
-   sendMessage(data);
+   createRoom(data);
 })
 
-getMessages(1);
+// INIT
+getLastRoom();
