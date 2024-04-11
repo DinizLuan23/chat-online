@@ -1,31 +1,31 @@
 import json
+from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic.detail import DetailView
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Message, Room
 
+@csrf_exempt
 def home(req):
+   username = req.COOKIES.get('username')
    rooms = Room.objects.all().order_by('-created_at')
-   return render(req, 'chat/home.html', { 'rooms': rooms })
+   return render(req, 'chat/home.html', { 'rooms': rooms, 'username': username })
 
-class RoomDetailView(DetailView):
-   model = Room
-   template_name = 'chat/message-list.html'
+def room_detail(req, room_id):
+   room = Room.objects.get(id=room_id)
+   username = req.COOKIES.get('username')
+   return render(req, 'chat/message-list.html', { 'rooms': room, 'username': username })
 
-   def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      return context
-
-def send_message(req, pk):
+def send_message(req, room_id):
    data = json.loads(req.body)
-   room = Room.objects.get(id=pk)
-   new_message = Message.objects.create(user = req.user, text=data['message'])
+   room = Room.objects.get(id=room_id)
+   new_message = Message.objects.create(username = data['username'], text=data['message'])
    room.messages.add(new_message)
    
-   return render(req, 'chat/message.html', { 'message': new_message })
+   return render(req, 'chat/message.html', { 'message': new_message, 'username': data['username'] })
 
 def create_room(req):
    data = json.loads(req.body)
-   room = Room.objects.create(user=req.user, title=data['title'])
+   room = Room.objects.create(user=data['username'], title=data['title'])
    
-   return render(req, 'chat/room.html', { 'room': room })
+   return render(req, 'chat/room.html', { 'room': room, 'username': data['username'] })

@@ -7,32 +7,38 @@
 
 {% block content %}
    <div class="d-flex h-100">
-      <div class="chat-rooms h-100 w-25">
-         <div class="rooms m-3">
-            <div class="d-flex justify-content-between">
-                  <h3>chat<span class="text-primary">us</span></h3>
-                  <button class="btn btn-transparent mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                     <i class="bi bi-plus-circle-fill text-primary"></i>
-                  </button>
-            </div>
+      {% if username is not None %}
+         <div class="chat-rooms h-100 w-25">
+            <div class="rooms m-3">
+               <div class="d-flex justify-content-between">
+                     <h3>chat<span class="text-primary">us</span></h3>
+                     <button class="btn btn-transparent mb-2" data-bs-toggle="modal" data-bs-target="#modalCreateRoom">
+                        <i class="bi bi-plus-circle-fill text-primary"></i>
+                     </button>
+               </div>
 
-            <ul class="list-rooms list-group shadow border-0">
-               {% include 'chat/rooms-list.html' %}
-            </ul>
+               <ul class="list-rooms list-group shadow border-0">
+                  {% include 'chat/rooms-list.html' %}
+               </ul>
+            </div>
          </div>
-      </div>
-      <div class="chat-messages h-100 w-75">
-         <div class="messages card m-3 p-3 h-75 shadow border-0 overflow-auto">
-            {% include 'chat/message-list.html' %}
+         <div class="chat-messages h-100 w-75">
+            <div class="messages card m-3 p-3 h-75 shadow border-0 overflow-auto">
+               {% include 'chat/message-list.html' %}
+            </div>
+            
+            <div class="card m-3 shadow border-0">
+               {% include 'chat/send-message.html' %}
+            </div>
          </div>
-         
-         <div class="card m-3 shadow border-0">
-            {% include 'chat/send-message.html' %}
-         </div>
-      </div>
+      {% endif %}
    </div>
 
-   {% include 'chat/create-room.html' %}
+   {% if username %}
+      {% include 'chat/create-room.html' %}
+   {% else %}
+      {% include 'chat/select-name.html' %}
+   {% endif %}
 {% endblock %}
 
 {% block js %}

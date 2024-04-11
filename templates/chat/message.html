@@ -1,7 +1,7 @@
 <li class="list-group-item border-bottom-0">
    <div class="d-flex justify-content-between">
       <div class="content">
-            <b>@{{ message.user.username }}</b> {{ message.text }}
+         <b>@{{ message.username }}</b> {{ message.text|safe }}
       </div>
       <div class="time">{{ message.created_at }}</div>
    </div>
